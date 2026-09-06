@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Skills — SIH 26135 Person 1</title><link rel="stylesheet" href="styles.css"></head>
+<body><main class="app-shell">
+<header class="topbar"><div class="brand"><div class="brand-mark">SIH</div><div><strong>Person 1 · Skills</strong><small>SIH 26135</small></div></div><button id="logoutButton" class="btn btn-ghost">Sign out</button></header>
+<nav class="navbar"><a href="dashboard.html">Dashboard</a><a href="register.html">Registration</a><a href="profile.html">Profile</a><a href="training.html">Training</a><a class="active" href="skills.html">Skills</a></nav>
+<section class="grid grid-2">
+<section class="panel"><div class="section-head"><div><h1 class="page-title">Add skill</h1><p class="page-subtitle">Record an existing skill, target role or identified skill need.</p></div></div>
+<form id="skillsForm" class="stack">
+<div class="form-group"><label for="skill_name">Skill / target role *</label><input id="skill_name" required></div>
+<div class="form-group"><label for="skill_category">Category</label><select id="skill_category"><option value="">Select</option><option>Technical</option><option>Soft Skill</option><option>Identified Skill Gap</option><option>Target Job Role</option><option>Other</option></select></div>
+<div class="form-group"><label for="proficiency_level">Proficiency *</label><select id="proficiency_level" required><option value="">Select</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option><option>Expert</option><option>Needs Improvement</option><option>Aspiring</option></select></div>
+<button id="saveButton" class="btn btn-primary">Add skill</button>
+</form><p id="message" class="form-message"></p></section>
+<section class="panel"><div class="section-head"><div><h2>Recorded skills</h2><p>Your current skill records.</p></div></div><div class="table-wrap"><table><thead><tr><th>Skill</th><th>Category</th><th>Proficiency</th></tr></thead><tbody id="skillRows"></tbody></table></div></section>
+</section></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase.js"></script><script src="js/auth.js"></script><script src="js/skills.js"></script>
+</body></html>

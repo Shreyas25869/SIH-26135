@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard — SIH 26135 Person 1</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand"><div class="brand-mark">SIH</div><div><strong>Person 1 · Trainee Portal</strong><small>SIH 26135</small></div></div>
+      <button id="logoutButton" class="btn btn-ghost">Sign out</button>
+    </header>
+    <nav class="navbar">
+      <a class="active" href="dashboard.html">Dashboard</a>
+      <a href="register.html">Registration</a>
+      <a href="profile.html">Profile</a>
+      <a href="training.html">Training</a>
+      <a href="skills.html">Skills</a>
+    </nav>
+
+    <section id="dashboardContent">
+      <div class="panel hero">
+        <h1>Welcome, <span id="welcomeName">Trainee</span></h1>
+        <p>Your profile is the foundation for training, placement, employment follow-up and outcome analytics.</p>
+        <span id="statusBadge" class="status-badge">Not set</span>
+      </div>
+
+      <div class="grid grid-4 mt">
+        <article class="metric-card"><div class="label">Training records</div><div id="trainingCount" class="value">0</div><div class="hint">Programs recorded</div></article>
+        <article class="metric-card"><div class="label">Skill records</div><div id="skillsCount" class="value">0</div><div class="hint">Skills / targets</div></article>
+        <article class="metric-card"><div class="label">District</div><div id="profileDistrict" class="value">—</div><div class="hint">Profile location</div></article>
+        <article class="metric-card"><div class="label">Education</div><div id="profileEducation" class="value">—</div><div class="hint">Highest level</div></article>
+      </div>
+
+      <div class="grid grid-2 mt">
+        <section class="panel">
+          <div class="section-head"><div><h2>Training snapshot</h2><p>Your recorded training participation.</p></div><a href="training.html">Manage</a></div>
+          <ul id="trainingList" class="list"></ul>
+        </section>
+        <section class="panel">
+          <div class="section-head"><div><h2>Skills snapshot</h2><p>Skills currently associated with your profile.</p></div><a href="skills.html">Manage</a></div>
+          <ul id="skillList" class="list"></ul>
+        </section>
+      </div>
+
+      <section class="panel mt">
+        <div class="section-head"><div><h2>Profile metadata</h2><p>Last saved information.</p></div><a href="profile.html">Edit profile</a></div>
+        <p class="muted">Last updated: <strong id="profileUpdated">—</strong></p>
+      </section>
+    </section>
+
+    <section id="emptyProfile" class="empty-state" hidden>
+      <div class="icon">👤</div><h2>Complete your trainee profile</h2>
+      <p class="muted">No trainee record is linked to this account yet.</p>
+      <a class="btn btn-primary" href="register.html">Start registration →</a>
+    </section>
+
+    <p id="dashboardError" class="form-message error" hidden></p>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

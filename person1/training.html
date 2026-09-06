@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Training — SIH 26135 Person 1</title><link rel="stylesheet" href="styles.css"></head>
+<body><main class="app-shell">
+<header class="topbar"><div class="brand"><div class="brand-mark">SIH</div><div><strong>Person 1 · Training</strong><small>SIH 26135</small></div></div><button id="logoutButton" class="btn btn-ghost">Sign out</button></header>
+<nav class="navbar"><a href="dashboard.html">Dashboard</a><a href="register.html">Registration</a><a href="profile.html">Profile</a><a class="active" href="training.html">Training</a><a href="skills.html">Skills</a></nav>
+<section class="grid grid-2">
+<section class="panel"><div class="section-head"><div><h1 class="page-title">Add training</h1><p class="page-subtitle">Record participation in a training program.</p></div></div>
+<form id="trainingForm" class="stack">
+<div class="form-group"><label for="program_name">Program *</label><select id="program_name" required><option value="">Select program</option><option>PMKVY</option><option>ITI</option><option>Apprenticeship</option><option>Other_MH_Initiative</option></select></div>
+<div class="form-group"><label for="certification_status">Certification status *</label><select id="certification_status" required><option value="">Select</option><option>Completed</option><option>In Progress</option><option>Not Completed</option></select></div>
+<div class="form-group"><label for="course_id">Course UUID <span class="muted">(optional)</span></label><input id="course_id" placeholder="Use when linking to Person 2 course data"></div>
+<div class="form-group"><label for="batch_id">Batch UUID <span class="muted">(optional)</span></label><input id="batch_id" placeholder="Use when linking to Person 2 batch data"></div>
+<button id="saveButton" class="btn btn-primary">Add training</button>
+</form><p id="message" class="form-message"></p></section>
+<section class="panel"><div class="section-head"><div><h2>Recorded training</h2><p>Your current records.</p></div></div><div class="table-wrap"><table><thead><tr><th>Program</th><th>Certification</th><th>Course</th><th>Batch</th></tr></thead><tbody id="trainingRows"></tbody></table></div></section>
+</section></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase.js"></script><script src="js/auth.js"></script><script src="js/training.js"></script>
+</body></html>
