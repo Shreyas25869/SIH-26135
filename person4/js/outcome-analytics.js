@@ -1,0 +1,2 @@
+async function load(){const {data,error}=await supabaseClient.from("outcome_analytics").select("*").order("calculated_at",{ascending:false});if(error)throw error;document.getElementById("output").textContent=JSON.stringify(data,null,2);}
+document.addEventListener("DOMContentLoaded",async()=>{try{if(!await requireUser())return;await load();document.getElementById("refresh").onclick=load;}catch(e){document.getElementById("output").textContent=e.message;}});
