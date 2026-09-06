@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>RozgarMitra - Reset Password</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .auth-shell {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 45% 55%;
+        }
+
+        .brand-panel {
+            padding: 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+        }
+
+        .brand-content {
+            max-width: 520px;
+            margin: auto 0;
+        }
+
+        .form-panel {
+            display: grid;
+            place-items: center;
+            padding: 35px;
+        }
+
+        .form-card {
+            width: min(470px, 100%);
+        }
+
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 25px;
+        }
+
+        form {
+            margin-top: 25px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 7px;
+        }
+
+        input {
+            width: 100%;
+            height: 48px;
+            padding: 0 12px;
+        }
+
+        .password-wrap {
+            position: relative;
+        }
+
+        .show-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .primary-btn {
+            width: 100%;
+            height: 48px;
+            margin-top: 22px;
+        }
+
+        .switch-text {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .mobile-brand {
+            display: none;
+        }
+
+        @media (max-width: 800px) {
+
+            .auth-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .brand-panel {
+                display: none;
+            }
+
+            .mobile-brand {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 30px;
+            }
+
+            .form-panel {
+                padding: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<main class="auth-shell">
+
+    <section class="brand-panel">
+
+        <div class="brand">
+            <div class="logo">S</div>
+            <span>RozgarMitra</span>
+        </div>
+
+        <div class="brand-content">
+
+            <p>NEW PASSWORD</p>
+
+            <h1>
+                Make your account secure.
+            </h1>
+
+            <p>
+                Choose a new password you can remember
+                and keep your account protected.
+            </p>
+
+        </div>
+
+        <div>
+            RozgarMitra Authentication
+        </div>
+
+    </section>
+
+
+    <section class="form-panel">
+
+        <div class="form-card">
+
+            <div class="mobile-brand">
+                <div class="logo">R</div>
+                <span>RozgarMitra</span>
+            </div>
+
+            <div class="icon-circle">
+                ✓
+            </div>
+
+            <p>PASSWORD RESET</p>
+
+            <h2>Create new password</h2>
+
+            <p>
+                Set a new password for your account.
+            </p>
+
+            <div id="message"></div>
+
+            <form id="resetForm">
+
+                <label>New Password</label>
+
+                <div class="password-wrap">
+
+                    <input
+                        id="password"
+                        type="password"
+                        placeholder="Min. 6 characters"
+                        minlength="6"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="show-btn"
+                        data-target="password"
+                    >
+                        Show
+                    </button>
+
+                </div>
+
+
+                <label>Confirm New Password</label>
+
+                <input
+                    id="confirmPassword"
+                    type="password"
+                    placeholder="Repeat new password"
+                    required
+                >
+
+
+                <button
+                    class="primary-btn"
+                    type="submit"
+                >
+                    Update Password →
+                </button>
+
+            </form>
+
+            <p class="switch-text">
+
+                <a href="index.html">
+                    Back to login
+                </a>
+
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script src="js/auth.js"></script>
+
+</body>
+</html>

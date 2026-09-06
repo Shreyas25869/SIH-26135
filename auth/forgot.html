@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>RozgarMitra - Forgot Password</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .auth-shell {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 45% 55%;
+        }
+
+        .brand-panel {
+            padding: 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+        }
+
+        .brand-content {
+            max-width: 520px;
+            margin: auto 0;
+        }
+
+        .form-panel {
+            display: grid;
+            place-items: center;
+            padding: 35px;
+        }
+
+        .form-card {
+            width: min(470px, 100%);
+        }
+
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 25px;
+        }
+
+        form {
+            margin-top: 25px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 7px;
+        }
+
+        input {
+            width: 100%;
+            height: 48px;
+            padding: 0 12px;
+        }
+
+        .primary-btn {
+            width: 100%;
+            height: 48px;
+            margin-top: 22px;
+        }
+
+        .switch-text {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .mobile-brand {
+            display: none;
+        }
+
+        @media (max-width: 800px) {
+
+            .auth-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .brand-panel {
+                display: none;
+            }
+
+            .mobile-brand {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 30px;
+            }
+
+            .form-panel {
+                padding: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<main class="auth-shell">
+
+    <section class="brand-panel">
+
+        <div class="brand">
+            <div class="logo">R</div>
+            <span>RozgarMitra</span>
+        </div>
+
+        <div class="brand-content">
+
+            <p>ACCOUNT RECOVERY</p>
+
+            <h1>
+                We'll help you get back in.
+            </h1>
+
+            <p>
+                Enter the email linked to your account
+                to continue the password reset process.
+            </p>
+
+        </div>
+
+        <div>
+            Your account, your journey.
+        </div>
+
+    </section>
+
+
+    <section class="form-panel">
+
+        <div class="form-card">
+
+            <div class="mobile-brand">
+                <div class="logo">R</div>
+                <span>RozgarMitra</span>
+            </div>
+
+            <div class="icon-circle">
+                ↗
+            </div>
+
+            <p>FORGOT PASSWORD</p>
+
+            <h2>Reset your password</h2>
+
+            <p>
+                Enter your registered email address.
+            </p>
+
+            <div id="message"></div>
+
+            <form id="forgotForm">
+
+                <label>Email</label>
+
+                <input
+                    id="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    required
+                >
+
+                <button
+                    class="primary-btn"
+                    type="submit"
+                >
+                    Continue →
+                </button>
+
+            </form>
+
+            <p class="switch-text">
+
+                <a href="index.html">
+                    ← Back to login
+                </a>
+
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script src="js/auth.js"></script>
+
+</body>
+</html>

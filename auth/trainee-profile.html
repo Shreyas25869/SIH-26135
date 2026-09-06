@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Trainee Profile - RozgarMitra</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .page {
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .profile-heading {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+
+        .profile-photo {
+            width: 100px;
+            height: 100px;
+            display: grid;
+            place-items: center;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            font-family: inherit;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 25px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 700px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+
+            .profile-heading {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <header class="header">
+
+        <div class="brand">
+            <div class="logo">R</div>
+            <strong>RozgarMitra</strong>
+        </div>
+
+        <a href="dashboard.html">Dashboard</a>
+
+    </header>
+
+
+    <main class="container">
+
+        <div class="profile-heading">
+
+            <div class="profile-photo">
+                Photo
+            </div>
+
+            <div>
+                <h1>Trainee Profile</h1>
+                <p>Complete your personal and training information.</p>
+            </div>
+
+        </div>
+
+
+        <section class="section">
+
+            <h2>Personal Information</h2>
+
+            <div class="form-grid">
+
+                <div class="field">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="Enter full name">
+                </div>
+
+                <div class="field">
+                    <label>Date of Birth</label>
+                    <input type="date">
+                </div>
+
+                <div class="field">
+                    <label>Mobile Number</label>
+                    <input type="tel" placeholder="Enter mobile number">
+                </div>
+
+                <div class="field">
+                    <label>Email</label>
+                    <input type="email" placeholder="Enter email">
+                </div>
+
+                <div class="field">
+                    <label>Gender</label>
+
+                    <select>
+                        <option>Select gender</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Other</option>
+                    </select>
+
+                </div>
+
+                <div class="field">
+                    <label>District</label>
+                    <input type="text" placeholder="Enter district">
+                </div>
+
+                <div class="field">
+                    <label>State</label>
+                    <input type="text" placeholder="Enter state">
+                </div>
+
+                <div class="field">
+                    <label>Preferred Language</label>
+                    <input type="text" placeholder="Enter language">
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="section">
+
+            <h2>Education</h2>
+
+            <div class="form-grid">
+
+                <div class="field">
+                    <label>Highest Qualification</label>
+
+                    <select>
+                        <option>Select qualification</option>
+                        <option>10th</option>
+                        <option>12th</option>
+                        <option>Diploma</option>
+                        <option>Graduate</option>
+                        <option>Post Graduate</option>
+                    </select>
+
+                </div>
+
+                <div class="field">
+                    <label>Institution</label>
+                    <input type="text" placeholder="Institution name">
+                </div>
+
+                <div class="field">
+                    <label>Passing Year</label>
+                    <input type="number" placeholder="Year">
+                </div>
+
+                <div class="field">
+                    <label>Field of Study</label>
+                    <input type="text" placeholder="Field of study">
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="section">
+
+            <h2>Skills</h2>
+
+            <div class="field">
+
+                <label>Skills</label>
+
+                <textarea
+                    placeholder="Enter your skills">
+                </textarea>
+
+            </div>
+
+        </section>
+
+
+        <section class="section">
+
+            <h2>Training History</h2>
+
+            <div class="form-grid">
+
+                <div class="field">
+                    <label>Training Provider</label>
+                    <input type="text">
+                </div>
+
+                <div class="field">
+                    <label>Course Name</label>
+                    <input type="text">
+                </div>
+
+                <div class="field">
+                    <label>Start Date</label>
+                    <input type="date">
+                </div>
+
+                <div class="field">
+                    <label>Completion Date</label>
+                    <input type="date">
+                </div>
+
+                <div class="field">
+                    <label>Status</label>
+
+                    <select>
+                        <option>Select status</option>
+                        <option>Ongoing</option>
+                        <option>Completed</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="section">
+
+            <h2>Certifications</h2>
+
+            <div class="field">
+
+                <label>Certification Details</label>
+
+                <textarea
+                    placeholder="Enter certification details">
+                </textarea>
+
+            </div>
+
+        </section>
+
+
+        <div class="buttons">
+
+            <button type="button">
+                Save Profile
+            </button>
+
+            <button type="button">
+                Back
+            </button>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
