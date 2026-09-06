@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIH26135 - Trainee Outcome Portal</title>
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --success-color: #16a34a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 30px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            padding: 32px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+
+        .step-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .step-dot.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .step-dot.completed {
+            background: var(--success-color);
+            color: #fff;
+        }
+
+        .step-line {
+            width: 25px;
+            height: 2px;
+            background: #e2e8f0;
+            transition: background 0.2s ease;
+        }
+
+        .step-line.completed {
+            background: var(--success-color);
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .vertical-program-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .program-card-vertical {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            outline: none;
+        }
+
+        .program-card-vertical:hover,
+        .program-card-vertical:focus-visible {
+            border-color: #93c5fd;
+            background: #eff6ff;
+        }
+
+        .program-card-vertical.selected {
+            border-color: var(--primary);
+            background: #eff6ff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .card-icon-large {
+            font-size: 28px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .card-content {
+            flex-grow: 1;
+        }
+
+        .checkbox-badge {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            border: 2px solid #cbd5e1;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .program-card-vertical.selected .checkbox-badge {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .status-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 18px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .status-card:hover {
+            border-color: #93c5fd;
+            background: #eff6ff;
+        }
+
+        .status-card.selected {
+            border-color: var(--primary);
+            background: #eff6ff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .card-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        label .required {
+            color: #ef4444;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: #fff;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .consent-box {
+            background: #f1f5f9;
+            padding: 14px 16px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            margin-top: 10px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-top: 2px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: #334155;
+        }
+
+        .btn-secondary:hover {
+            background-color: #cbd5e1;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 600px) {
+            .cards-grid, .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .full-width {
+                grid-column: span 1;
+            }
+        }
+
+        .success-card {
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Trainee Outcome Portal</h1>
+        <p>Department of Skills, Employment, Entrepreneurship and Innovation</p>
+    </div>
+
+    <!-- Step Indicator -->
+    <div class="step-indicator" aria-label="Progress Bar">
+        <div id="dot1" class="step-dot active">1</div>
+        <div id="line1" class="step-line"></div>
+        <div id="dot2" class="step-dot">2</div>
+        <div id="line2" class="step-line"></div>
+        <div id="dot3" class="step-dot">3</div>
+        <div id="line3" class="step-line"></div>
+        <div id="dot4" class="step-dot">4</div>
+    </div>
+
+    <!-- PAGE 1: TRAINEE PROFILE & CONSENT -->
+    <div id="page1" class="page active">
+        <h2 style="font-size: 16px; margin-bottom: 16px;">Step 1: Trainee Profile & Consent</h2>
+        
+        <form id="traineeProfileForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="full_name">Full Name <span class="required">*</span></label>
+                    <input type="text" id="full_name" required placeholder="e.g. Rahul Sharma">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address <span class="required">*</span></label>
+                    <input type="email" id="email" required placeholder="e.g. rahul@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number <span class="required">*</span></label>
+                    <input type="tel" id="phone" required placeholder="e.g. 9876543210">
+                </div>
+                <div class="form-group">
+                    <label for="date_of_birth">Date of Birth <span class="required">*</span></label>
+                    <input type="date" id="date_of_birth" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender <span class="required">*</span></label>
+                    <select id="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="education_level">Highest Education <span class="required">*</span></label>
+                    <select id="education_level" required>
+                        <option value="">Select Education</option>
+                        <option value="10th Pass">10th Pass</option>
+                        <option value="12th Pass">12th Pass</option>
+                        <option value="ITI Graduate">ITI Graduate</option>
+                        <option value="Diploma">Diploma</option>
+                        <option value="Graduate">Graduate</option>
+                        <option value="Post Graduate">Post Graduate</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="district">District <span class="required">*</span></label>
+                    <input type="text" id="district" required placeholder="e.g. Pune">
+                </div>
+                <div class="form-group">
+                    <label for="city">City <span class="required">*</span></label>
+                    <input type="text" id="city" required placeholder="e.g. Pimpri">
+                </div>
+            </div>
+
+            <!-- Mandatory Consent -->
+            <div class="consent-box full-width" style="margin-top: 16px;">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="consent_given" required>
+                    <label for="consent_given" style="font-weight: normal; font-size: 13px; line-height: 1.4;">
+                        <strong>Declaration & Consent:</strong> I hereby give my consent for my training and career outcome details to be collected and processed for government monitoring and evaluation purposes. <span class="required">*</span>
+                    </label>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-primary" style="margin-top: 24px;" onclick="validateAndGoToPage2()">Continue to Programs →</button>
+        </form>
+    </div>
+
+    <!-- PAGE 2: VERTICAL TRAINING PROGRAMS -->
+    <div id="page2" class="page">
+        <h2 style="font-size: 16px; margin-bottom: 6px;">Step 2: Training Programs Attended</h2>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Select all training initiatives you have participated in.</p>
+
+        <div class="vertical-program-list">
+            <div class="program-card-vertical" tabindex="0" role="checkbox" aria-checked="false" onclick="toggleProgram('PMKVY', this)">
+                <span class="card-icon-large">📜</span>
+                <div class="card-content">
+                    <div class="card-title">Pradhan Mantri Kaushal Vikas Yojana (PMKVY)</div>
+                    <div class="card-desc">Short-term vocational skill training and certification courses.</div>
+                </div>
+                <div class="checkbox-badge">✓</div>
+            </div>
+
+            <div class="program-card-vertical" tabindex="0" role="checkbox" aria-checked="false" onclick="toggleProgram('ITI', this)">
+                <span class="card-icon-large">🏛️</span>
+                <div class="card-content">
+                    <div class="card-title">Government ITI Training Program</div>
+                    <div class="card-desc">Industrial Training Institutes (ITI) technical & trade courses.</div>
+                </div>
+                <div class="checkbox-badge">✓</div>
+            </div>
+
+            <div class="program-card-vertical" tabindex="0" role="checkbox" aria-checked="false" onclick="toggleProgram('Apprenticeship', this)">
+                <span class="card-icon-large">⚙️</span>
+                <div class="card-content">
+                    <div class="card-title">National Apprenticeship Training Scheme (NAPS / NATS)</div>
+                    <div class="card-desc">On-the-job industrial and practical training initiatives.</div>
+                </div>
+                <div class="checkbox-badge">✓</div>
+            </div>
+
+            <div class="program-card-vertical" tabindex="0" role="checkbox" aria-checked="false" onclick="toggleProgram('Other_MH_Initiative', this)">
+                <span class="card-icon-large">🏬</span>
+                <div class="card-content">
+                    <div class="card-title">Other State Skill Development Initiatives</div>
+                    <div class="card-desc">Other state-sponsored short-term skill or EDP training programs.</div>
+                </div>
+                <div class="checkbox-badge">✓</div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button type="button" class="btn btn-secondary" onclick="goToPage(1)">← Back</button>
+            <button type="button" class="btn btn-primary" onclick="validateAndGoToPage3()">Continue to Status →</button>
+        </div>
+    </div>
+
+    <!-- PAGE 3: EMPLOYMENT STATUS SELECTION -->
+    <div id="page3" class="page">
+        <h2 style="font-size: 16px; margin-bottom: 6px;">Step 3: Current Employment Status</h2>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Choose the option that best describes your current career status.</p>
+
+        <div class="cards-grid">
+            <div class="status-card" tabindex="0" onclick="selectStatus('employed', this)">
+                <span style="font-size: 26px;">💼</span>
+                <div class="card-title" style="margin-top: 8px;">Employed</div>
+                <div class="card-desc">Working full-time, part-time, or contractual</div>
+            </div>
+
+            <div class="status-card" tabindex="0" onclick="selectStatus('unemployed', this)">
+                <span style="font-size: 26px;">⏳</span>
+                <div class="card-title" style="margin-top: 8px;">Unemployed</div>
+                <div class="card-desc">Currently seeking jobs or identifying skill gaps</div>
+            </div>
+
+            <div class="status-card" tabindex="0" onclick="selectStatus('apprenticeship', this)">
+                <span style="font-size: 26px;">🛠️</span>
+                <div class="card-title" style="margin-top: 8px;">Apprenticeship</div>
+                <div class="card-desc">Enrolled in corporate or government apprenticeship</div>
+            </div>
+
+            <div class="status-card" tabindex="0" onclick="selectStatus('self_employed', this)">
+                <span style="font-size: 26px;">🚀</span>
+                <div class="card-title" style="margin-top: 8px;">Self-Employed</div>
+                <div class="card-desc">Running a business, freelancing, or enterprise</div>
+            </div>
+
+            <div class="status-card" style="grid-column: span 2;" tabindex="0" onclick="selectStatus('higher_studies', this)">
+                <span style="font-size: 26px;">🎓</span>
+                <div class="card-title" style="margin-top: 8px;">Higher Studies</div>
+                <div class="card-desc">Pursuing further degree, diploma, or higher education</div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button type="button" class="btn btn-secondary" onclick="goToPage(2)">← Back</button>
+            <button id="p3NextBtn" class="btn btn-primary" onclick="goToPage4()" disabled>Continue to Details →</button>
+        </div>
+    </div>
+
+    <!-- PAGE 4: DETAILED STATUS FORM -->
+    <div id="page4" class="page">
+        <!-- EMPLOYED FORM -->
+        <form id="form_employed" class="status-form" style="display:none;" onsubmit="submitAllToSupabase(event, 'Employed')">
+            <h2 style="font-size: 16px; margin-bottom: 16px;">Step 4: Enter Employment Details</h2>
+            <div class="form-grid">
+                <div class="form-group"><label>Employer / Organization Name <span class="required">*</span></label><input type="text" id="emp_name" required></div>
+                <div class="form-group"><label>Job Role / Designation <span class="required">*</span></label><input type="text" id="emp_role" required></div>
+                <div class="form-group"><label>Joining Date <span class="required">*</span></label><input type="date" id="emp_joining_date" required></div>
+                <div class="form-group">
+                    <label>Employment Type <span class="required">*</span></label>
+                    <select id="emp_type" required>
+                        <option value="">Select Type</option>
+                        <option value="Full-Time">Full-Time</option>
+                        <option value="Part-Time">Part-Time</option>
+                        <option value="Contractual">Contractual</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Monthly Salary (INR) <span class="required">*</span></label><input type="number" id="emp_salary" min="0" required></div>
+                <div class="form-group"><label>Job Location <span class="required">*</span></label><input type="text" id="emp_location" required></div>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" onclick="goToPage(3)">← Back</button>
+                <button type="submit" class="btn btn-primary">Submit to Supabase</button>
+            </div>
+        </form>
+
+        <!-- UNEMPLOYED FORM -->
+        <form id="form_unemployed" class="status-form" style="display:none;" onsubmit="submitAllToSupabase(event, 'Unemployed')">
+            <h2 style="font-size: 16px; margin-bottom: 16px;">Step 4: Enter Unemployed Details</h2>
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label>Reason for Unemployment <span class="required">*</span></label>
+                    <select id="unemp_reason" required>
+                        <option value="">Select Reason</option>
+                        <option value="Actively Seeking Job">Actively Seeking / No Offers Yet</option>
+                        <option value="Lack of Local Jobs">Lack of Job Opportunities</option>
+                        <option value="Exam Preparation">Preparing for Govt Exams</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Desired Job Role <span class="required">*</span></label><input type="text" id="desired_job" required></div>
+                <div class="form-group full-width">
+                    <label>Identified Skill Gaps / Training Needed</label>
+                    <textarea id="skill_gap_input" rows="3" placeholder="e.g. Advanced CNC Milling, Python"></textarea>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" onclick="goToPage(3)">← Back</button>
+                <button type="submit" class="btn btn-primary">Submit to Supabase</button>
+            </div>
+        </form>
+
+        <!-- APPRENTICESHIP FORM -->
+        <form id="form_apprenticeship" class="status-form" style="display:none;" onsubmit="submitAllToSupabase(event, 'Apprenticeship')">
+            <h2 style="font-size: 16px; margin-bottom: 16px;">Step 4: Enter Apprenticeship Details</h2>
+            <div class="form-grid">
+                <div class="form-group"><label>Company / Organization Name <span class="required">*</span></label><input type="text" id="appr_company" required></div>
+                <div class="form-group"><label>Apprenticeship Contract ID <span class="required">*</span></label><input type="text" id="appr_contract_id" required></div>
+                <div class="form-group"><label>Monthly Stipend (INR) <span class="required">*</span></label><input type="number" id="appr_stipend" required></div>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" onclick="goToPage(3)">← Back</button>
+                <button type="submit" class="btn btn-primary">Submit to Supabase</button>
+            </div>
+        </form>
+
+        <!-- SELF-EMPLOYED FORM -->
+        <form id="form_self_employed" class="status-form" style="display:none;" onsubmit="submitAllToSupabase(event, 'Self-Employed')">
+            <h2 style="font-size: 16px; margin-bottom: 16px;">Step 4: Enter Self-Employed Details</h2>
+            <div class="form-grid">
+                <div class="form-group"><label>Work / Business Type <span class="required">*</span></label><input type="text" id="business_type" required></div>
+                <div class="form-group"><label>Business Start Date <span class="required">*</span></label><input type="date" id="business_start_date" required></div>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" onclick="goToPage(3)">← Back</button>
+                <button type="submit" class="btn btn-primary">Submit to Supabase</button>
+            </div>
+        </form>
+
+        <!-- HIGHER STUDIES FORM -->
+        <form id="form_higher_studies" class="status-form" style="display:none;" onsubmit="submitAllToSupabase(event, 'Higher Studies')">
+            <h2 style="font-size: 16px; margin-bottom: 16px;">Step 4: Enter Higher Education Details</h2>
+            <div class="form-grid">
+                <div class="form-group"><label>Degree / Course Enrolled <span class="required">*</span></label><input type="text" id="hs_course" required></div>
+                <div class="form-group"><label>Institution Name <span class="required">*</span></label><input type="text" id="hs_institution" required></div>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" onclick="goToPage(3)">← Back</button>
+                <button type="submit" class="btn btn-primary">Submit to Supabase</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- SUCCESS PAGE -->
+    <div id="page_success" class="page">
+        <div class="success-card">
+            <span style="font-size: 48px;">🎉</span>
+            <h2 style="margin-top: 12px; font-size: 20px;">Outcome Logged Successfully!</h2>
+            <p style="color: var(--text-muted); margin-top: 8px;" id="successText"></p>
+            <button class="btn btn-secondary" style="margin-top: 20px;" onclick="location.reload()">Submit Another Response</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // -------------------------------------------------------------
+    // SUPABASE CONFIGURATION
+    // -------------------------------------------------------------
+    const SUPABASE_URL = "https://ntkbegbletsjexwcbmob.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50a2JlZ2JsZXRzamV4d2NibW9iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3MTk4MDEsImV4cCI6MjEwNDI5NTgwMX0.X7N67d1B_TP4lNllfEeQT1HSUbkIJLPc3dDHSJw9irs";
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const selectedPrograms = new Set();
+    let selectedStatus = null;
+
+    // STEP 1 VALIDATION
+    function validateAndGoToPage1() {
+        const profileForm = document.getElementById('traineeProfileForm');
+        if (!profileForm.checkValidity()) {
+            profileForm.reportValidity();
+            return false;
+        }
+        return true;
+    }
+
+    function validateAndGoToPage2() {
+        if (validateAndGoToPage1()) {
+            goToPage(2);
+        }
+    }
+
+    // STEP 2: Program Toggle
+    function toggleProgram(programId, element) {
+        if (selectedPrograms.has(programId)) {
+            selectedPrograms.delete(programId);
+            element.classList.remove('selected');
+        } else {
+            selectedPrograms.add(programId);
+            element.classList.add('selected');
+        }
+    }
+
+    function validateAndGoToPage3() {
+        if (selectedPrograms.size === 0) {
+            alert("Please select at least one training program.");
+            return;
+        }
+        goToPage(3);
+    }
+
+    // STEP 3: Status Selection
+    function selectStatus(status, element) {
+        selectedStatus = status;
+        document.querySelectorAll('.status-card').forEach(card => card.classList.remove('selected'));
+        element.classList.add('selected');
+        document.getElementById('p3NextBtn').disabled = false;
+    }
+
+    function goToPage4() {
+        if (!selectedStatus) return;
+        goToPage(4);
+        document.querySelectorAll('.status-form').forEach(form => form.style.display = 'none');
+        const activeForm = document.getElementById('form_' + selectedStatus);
+        if (activeForm) activeForm.style.display = 'block';
+    }
+
+    // GENERAL NAVIGATION & STEP INDICATORS
+    function goToPage(stepNum) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page' + stepNum).classList.add('active');
+
+        for (let i = 1; i <= 4; i++) {
+            const dot = document.getElementById(`dot${i}`);
+            const line = document.getElementById(`line${i}`);
+            dot.classList.remove('active', 'completed');
+            if (line) line.classList.remove('completed');
+
+            if (i < stepNum) {
+                dot.classList.add('completed');
+                dot.innerText = '✓';
+                if (line) line.classList.add('completed');
+            } else if (i === stepNum) {
+                dot.classList.add('active');
+                dot.innerText = i;
+            } else {
+                dot.innerText = i;
+            }
+        }
+    }
+
+    // -------------------------------------------------------------
+    // DATABASE INSERTION (SUPABASE)
+    // -------------------------------------------------------------
+    async function submitAllToSupabase(event, statusName) {
+        event.preventDefault();
+
+        const submitBtn = event.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Submitting...";
+
+        const now = new Date().toISOString();
+
+        // 1. Prepare Trainee Data
+        const traineeData = {
+            full_name: document.getElementById('full_name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            date_of_birth: document.getElementById('date_of_birth').value,
+            gender: document.getElementById('gender').value,
+            district: document.getElementById('district').value,
+            city: document.getElementById('city').value,
+            education_level: document.getElementById('education_level').value,
+            consent_given: document.getElementById('consent_given').checked,
+            consent_date: now
+        };
+
+        try {
+            // Insert Trainee Record
+            const { data: traineeResult, error: traineeError } = await _supabase
+                .from('trainees')
+                .insert([traineeData])
+                .select()
+                .single();
+
+            if (traineeError) throw new Error("Trainee Table Error: " + traineeError.message);
+
+            const traineeId = traineeResult.id;
+
+            // 2. Insert Training Programs Records
+            const trainingRecords = Array.from(selectedPrograms).map(programCode => ({
+                trainee_id: traineeId,
+                program_name: programCode,
+                certification_status: 'Completed'
+            }));
+
+            const { error: trainingError } = await _supabase
+                .from('trainee_training')
+                .insert(trainingRecords);
+
+            if (trainingError) console.warn("Training table notice:", trainingError.message);
+
+            // 3. Insert Skills Records
+            const skillRecords = [];
+            const skillGapText = document.getElementById('skill_gap_input')?.value;
+            if (skillGapText) {
+                skillRecords.push({
+                    trainee_id: traineeId,
+                    skill_name: skillGapText,
+                    skill_category: 'Identified Skill Gap',
+                    proficiency_level: 'Needs Improvement'
+                });
+            }
+
+            const desiredJobRole = document.getElementById('desired_job')?.value || document.getElementById('emp_role')?.value;
+            if (desiredJobRole) {
+                skillRecords.push({
+                    trainee_id: traineeId,
+                    skill_name: desiredJobRole,
+                    skill_category: 'Target Job Role',
+                    proficiency_level: 'Aspiring'
+                });
+            }
+
+            if (skillRecords.length > 0) {
+                const { error: skillError } = await _supabase
+                    .from('trainee_skills')
+                    .insert(skillRecords);
+
+                if (skillError) console.warn("Skills table notice:", skillError.message);
+            }
+
+            // Display Success Screen
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page_success').classList.add('active');
+            document.querySelector('.step-indicator').style.display = 'none';
+            document.getElementById('successText').innerText = 
+                `Profile created for ${traineeData.full_name}. Outcome status "${statusName}" saved to Supabase successfully.`;
+
+        } catch (error) {
+            console.error('Supabase Submission Error:', error);
+            alert('Submission Failed: ' + error.message);
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Submit to Supabase";
+        }
+    }
+
+    // -------------------------------------------------------------
+    // FETCH DATA EXAMPLES (Run these via Browser Console)
+    // -------------------------------------------------------------
+    async function fetchAllTraineeData() {
+        const { data, error } = await _supabase
+            .from('trainees')
+            .select(`
+                *,
+                trainee_training (*),
+                trainee_skills (*)
+            `);
+
+        if (error) {
+            console.error('Error fetching data:', error.message);
+            return null;
+        }
+
+        console.log('Fetched Trainee Data:', data);
+        return data;
+    }
+</script>
+
+</body>
+</html>
