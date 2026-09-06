@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIH 26135 — Employer & Employment Console</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div><div class="brand">SIH 26135</div><div class="brand-sub">Employer & Employment Console</div></div>
+  <div class="top-actions"><span id="user-email" class="user-email"></span><button id="logout-btn" class="btn btn-ghost">Sign out</button></div>
+</header>
+
+<div id="auth-screen" class="screen">
+  <div class="auth-card">
+    <div class="brand large">SIH 26135</div>
+    <h1>Employer & Employment Console</h1>
+    <p>Sign in to manage employers, jobs, applications, employment records, and verification.</p>
+    <form id="login-form">
+      <label>Email<input id="login-email" type="email" required autocomplete="email"></label>
+      <label>Password<input id="login-password" type="password" required autocomplete="current-password"></label>
+      <button class="btn btn-primary full" type="submit">Sign in</button>
+      <div id="login-error" class="error"></div>
+    </form>
+  </div>
+</div>
+
+<div id="app-shell" class="hidden">
+  <nav class="sidebar">
+    <button class="nav-item active" data-view="dashboard">Dashboard</button>
+    <button class="nav-item" data-view="employers">Employers</button>
+    <button class="nav-item" data-view="jobs">Jobs</button>
+    <button class="nav-item" data-view="applications">Applications</button>
+    <button class="nav-item" data-view="employment">Employment</button>
+    <button class="nav-item" data-view="verification">Verification</button>
+  </nav>
+
+  <main class="main">
+    <section id="view-dashboard" class="view active">
+      <div class="page-head"><div><h1>Dashboard</h1><p>Employer-side employment pipeline overview.</p></div></div>
+      <div id="stats" class="stats-grid"></div>
+      <div class="grid-two">
+        <div class="card"><h2>Recent Applications</h2><div id="recent-applications"></div></div>
+        <div class="card"><h2>Verification Queue</h2><div id="verification-queue"></div></div>
+      </div>
+    </section>
+
+    <section id="view-employers" class="view">
+      <div class="page-head"><div><h1>Employers</h1><p>Create and maintain employer profiles.</p></div></div>
+      <div class="card">
+        <form id="employer-form" class="form-grid">
+          <input id="employer-id" type="hidden">
+          <label>Company name<input id="employer-name" required></label>
+          <label>Industry<input id="employer-industry" required></label>
+          <label>Location<input id="employer-location"></label>
+          <label>Contact person<input id="employer-contact"></label>
+          <label>Contact email<input id="employer-email" type="email"></label>
+          <label>Phone<input id="employer-phone"></label>
+          <label class="span-2">Description<textarea id="employer-description"></textarea></label>
+          <div class="actions span-2"><button class="btn btn-primary">Save employer</button><button type="button" id="employer-cancel" class="btn btn-secondary hidden">Cancel</button></div>
+        </form>
+      </div>
+      <div class="card table-card"><div id="employers-table"></div></div>
+    </section>
+
+    <section id="view-jobs" class="view">
+      <div class="page-head"><div><h1>Jobs</h1><p>Post openings and manage their status.</p></div></div>
+      <div class="card">
+        <form id="job-form" class="form-grid">
+          <input id="job-id" type="hidden">
+          <label>Employer<select id="job-employer" required></select></label>
+          <label>Job title<input id="job-title" required></label>
+          <label>Location<input id="job-location" required></label>
+          <label>Employment type<select id="job-type"><option value="Full-time">Full-time</option><option value="Part-time">Part-time</option><option value="Contract">Contract</option><option value="Internship">Internship</option><option value="Apprenticeship">Apprenticeship</option></select></label>
+          <label>Category<input id="job-category" required></label>
+          <label>Minimum experience (years)<input id="job-exp" type="number" min="0" value="0"></label>
+          <label>Salary min<input id="job-salary-min" type="number" min="0"></label>
+          <label>Salary max<input id="job-salary-max" type="number" min="0"></label>
+          <label>Education<select id="job-education"><option value="None">None</option><option value="High School">High School</option><option value="Bachelor's">Bachelor's</option><option value="Master's">Master's</option></select></label>
+          <label>Status<select id="job-status"><option value="Open">Open</option><option value="Draft">Draft</option><option value="Closed">Closed</option><option value="Filled">Filled</option></select></label>
+          <label class="span-2">Description<textarea id="job-description" required></textarea></label>
+          <div class="actions span-2"><button class="btn btn-primary">Save job</button><button type="button" id="job-cancel" class="btn btn-secondary hidden">Cancel</button></div>
+        </form>
+      </div>
+      <div class="card table-card"><div id="jobs-table"></div></div>
+    </section>
+
+    <section id="view-applications" class="view">
+      <div class="page-head"><div><h1>Applications</h1><p>Track candidates through the recruitment pipeline.</p></div></div>
+      <div class="card">
+        <form id="application-form" class="form-grid">
+          <label>Job<select id="application-job" required></select></label>
+          <label>Trainee ID<input id="application-trainee" required placeholder="UUID from trainees table"></label>
+          <label>Status<select id="application-status"><option>Applied</option><option>Shortlisted</option><option>Interview</option><option>Selected</option><option>Rejected</option><option>Withdrawn</option></select></label>
+          <label class="span-2">Notes<textarea id="application-notes"></textarea></label>
+          <div class="actions span-2"><button class="btn btn-primary">Create application</button></div>
+        </form>
+      </div>
+      <div class="card table-card"><div id="applications-table"></div></div>
+    </section>
+
+    <section id="view-employment" class="view">
+      <div class="page-head"><div><h1>Employment</h1><p>Record confirmed employment outcomes for trainees.</p></div></div>
+      <div class="card">
+        <form id="employment-form" class="form-grid">
+          <label>Trainee ID<input id="employment-trainee" required placeholder="UUID from trainees table"></label>
+          <label>Employer<select id="employment-employer" required></select></label>
+          <label>Job<select id="employment-job"></select></label>
+          <label>Job title<input id="employment-title" required></label>
+          <label>Employment type<select id="employment-type"><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Internship</option><option>Apprenticeship</option></select></label>
+          <label>Start date<input id="employment-start" type="date" required></label>
+          <label>End date<input id="employment-end" type="date"></label>
+          <label>Salary<input id="employment-salary" type="number" min="0"></label>
+          <label>Salary period<select id="employment-period"><option>Monthly</option><option>Annual</option><option>Hourly</option></select></label>
+          <label>Location<input id="employment-location"></label>
+          <label class="span-2">Reason for leaving<textarea id="employment-reason"></textarea></label>
+          <div class="actions span-2"><button class="btn btn-primary">Save employment</button></div>
+        </form>
+      </div>
+      <div class="card table-card"><div id="employment-table"></div></div>
+    </section>
+
+    <section id="view-verification" class="view">
+      <div class="page-head"><div><h1>Employment Verification</h1><p>Employer-side verification of employment records.</p></div></div>
+      <div class="card">
+        <form id="verification-form" class="form-grid">
+          <label>Employment record<select id="verification-employment" required></select></label>
+          <label>Status<select id="verification-status"><option value="Verified">Verified</option><option value="Rejected">Rejected</option><option value="Pending">Pending</option></select></label>
+          <label>Verified salary<input id="verification-salary" type="number" min="0"></label>
+          <label>Verified start date<input id="verification-start" type="date"></label>
+          <label class="span-2">Notes<textarea id="verification-notes"></textarea></label>
+          <div class="actions span-2"><button class="btn btn-primary">Save verification</button></div>
+        </form>
+      </div>
+      <div class="card table-card"><div id="verification-table"></div></div>
+    </section>
+  </main>
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/supabase.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
