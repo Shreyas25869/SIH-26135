@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Jobs — SIH 26135 Person 1</title><link rel="stylesheet" href="styles.css"></head>
+<body><main class="app-shell">
+<header class="topbar"><div class="brand"><div class="brand-mark">SIH</div><div><strong>Person 1 · Jobs</strong><small>SIH 26135</small></div></div><button id="logoutButton" class="btn btn-ghost">Sign out</button></header>
+<nav class="navbar"><a href="dashboard.html">Dashboard</a><a href="register.html">Registration</a><a href="profile.html">Profile</a><a href="training.html">Training</a><a href="skills.html">Skills</a><a class="active" href="jobs.html">Jobs</a></nav>
+<section class="panel"><div class="section-head"><div><h1 class="page-title">Job opportunities</h1><p class="page-subtitle">Browse open jobs posted by employers and apply using your authenticated trainee profile.</p></div></div>
+<div id="jobsList" class="grid grid-2"><article class="panel"><p class="muted">Loading jobs…</p></article></div><p id="message" class="form-message"></p></section>
+<section class="panel mt"><div class="section-head"><div><h2>My applications</h2><p>Applications submitted from this trainee account.</p></div></div><div class="table-wrap"><table><thead><tr><th>Job</th><th>Status</th><th>Applied</th><th>Notes</th></tr></thead><tbody id="applicationRows"><tr><td colspan="4" class="table-empty">Loading…</td></tr></tbody></table></div></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../auth/js/supabase.js"></script><script src="../auth/js/roles.js"></script><script src="../auth/js/module-guard.js"></script><script src="js/supabase.js"></script><script src="js/auth.js"></script><script src="js/jobs.js"></script>
+</body></html>
