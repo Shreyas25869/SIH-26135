@@ -10,3 +10,4 @@ create policy "admins can read employment for outcome analytics" on public.emplo
 create policy "admins can read employment verifications for outcome analytics" on public.employment_verifications for select to authenticated using ((select auth.jwt()->'app_metadata'->>'role') = 'admin');
 create policy "admins can read skill gaps for outcome analytics" on public.skill_gaps for select to authenticated using ((select auth.jwt()->'app_metadata'->>'role') = 'admin');
 create policy "admins can read trainee followups for outcome analytics" on public.trainee_followups for select to authenticated using ((select auth.jwt()->'app_metadata'->>'role') = 'admin');
+create policy "admins can read notifications for outcome analytics" on public.notifications for select to authenticated using ((select auth.jwt()->'app_metadata'->>'role') = 'admin');
