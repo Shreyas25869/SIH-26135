@@ -3,7 +3,7 @@
 */
 (() => {
   const sb = window.supabaseClient;
-  const DEMO = !window.supabaseReady;
+  const DEMO = false;
   const app = document.getElementById('app');
   const state = {
     user: null, provider: null, courses: [], batches: [], trainees: [], enrollments: [],
@@ -52,8 +52,8 @@
   function textArea(name,value='',extra=''){ return `<textarea class="textarea" id="${esc(name)}" name="${esc(name)}" rows="3" ${extra}>${esc(value)}</textarea>`; }
 
   async function getSession(){
-    if(DEMO){ setDemoData(); return; }
-    const {data,error}=await sb.auth.getSession(); if(error) throw error; state.user=data.session?.user||null;
+    const session = await window.SIHAuth.getSession();
+    state.user = session?.user || null;
   }
   async function loadData(){
     if(DEMO) return;
@@ -96,39 +96,16 @@
   async function refresh(){ state.error=''; state.notice=''; if(DEMO){saveDemo();render();return;} await loadData(); }
   async function call(action){ try{state.error='';await action();state.notice='Saved successfully.';await refresh();}catch(e){state.error=e.message||'Operation failed.';render();} }
 
-  async function signIn(email,password){
-    if(DEMO){state.notice='Demo mode is active. Add Supabase credentials in js/config.js for real authentication.';render();return;}
-    const {error}=await sb.auth.signInWithPassword({email,password}); if(error) throw error; await loadData(); render();
-  }
-  async function signUp(email,password,org){
-    if(DEMO){state.notice='Demo mode does not create accounts. Configure Supabase in js/config.js first.';render();return;}
-    const {data,error}=await sb.auth.signUp({email,password,options:{data:{organization_name:org}}}); if(error) throw error;
-    state.notice=data.session?'Account created and signed in.':'Account created. Verify your email if confirmation is enabled.';render();
-  }
-  async function signOut(){ if(DEMO){state.user=null;renderAuth();return;} const {error}=await sb.auth.signOut();if(error)throw error;state.user=null;state.provider=null;renderAuth(); }
+  async function signIn(){ window.SIHAuth.redirectToLogin(); }
+  async function signUp(){ window.SIHAuth.redirectToLogin(); }
+  async function signOut(){ await window.SIHAuth.signOut(); window.SIHAuth.redirectToLogin(); }
 
   function nav(key,params={}){state.view=key;state.params=params;document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===key));renderMain();}
   function openModal(title,body){ document.getElementById('modal-root').innerHTML=`<div class="modal-backdrop" id="modal-bg"><div class="modal"><div class="modal-head"><h2>${esc(title)}</h2><button class="icon-btn" data-action="close-modal" aria-label="Close">×</button></div><div class="modal-body">${body}</div></div></div>`; }
   function closeModal(){document.getElementById('modal-root').innerHTML='';}
 
   function renderAuth(){
-    app.innerHTML=`<div class="auth-page"><div class="auth-card">
-      <div class="eyebrow">Rozgaar Mitra</div><h1 class="auth-title">Provider portal</h1>
-      <p class="muted small" style="line-height:1.6">Secure access for training providers managing courses, batches and enrolled trainees.</p>
-      ${DEMO?'<div class="notice success"><strong>Demo mode.</strong> The full interface works locally with sample records. Add your Supabase URL and anon key to <code>js/config.js</code> for live data.</div>':''}
-      <div class="tabs"><button class="tab active" id="login-tab">Sign in</button><button class="tab" id="signup-tab">Create account</button></div>
-      <form id="auth-form">
-        <div id="org-field" class="hidden"></div>
-        ${field('Email',input('auth-email','', 'email','required autocomplete="email"'))}
-        ${field('Password',input('auth-password','', 'password','required minlength="6" autocomplete="current-password"'))}
-        <div id="auth-message"></div>
-        <button id="auth-submit" class="btn btn-primary full" type="submit">Sign in</button>
-      </form>
-    </div></div>`;
-    let mode='login';
-    const tab=(m)=>{mode=m;document.getElementById('login-tab').classList.toggle('active',m==='login');document.getElementById('signup-tab').classList.toggle('active',m==='signup');document.getElementById('org-field').innerHTML=m==='signup'?field('Organization name',input('auth-org','','text','required')):'';document.getElementById('auth-submit').textContent=m==='login'?'Sign in':'Create account';};
-    document.getElementById('login-tab').onclick=()=>tab('login');document.getElementById('signup-tab').onclick=()=>tab('signup');
-    document.getElementById('auth-form').onsubmit=async e=>{e.preventDefault();const msg=document.getElementById('auth-message');msg.innerHTML='';const b=document.getElementById('auth-submit');b.disabled=true;b.textContent='Please wait…';try{const email=document.getElementById('auth-email').value.trim(),pw=document.getElementById('auth-password').value,org=document.getElementById('auth-org')?.value.trim()||'';if(mode==='login')await signIn(email,pw);else await signUp(email,pw,org);if(state.user)render();}catch(err){msg.innerHTML=`<div class="notice error">${esc(err.message)}</div>`;b.disabled=false;b.textContent=mode==='login'?'Sign in':'Create account';}};
+    window.SIHAuth.redirectToLogin();
   }
 
   function shell(){

@@ -1,2 +1,7 @@
-async function currentUser(){const {data,error}=await supabaseClient.auth.getUser();if(error)throw error;return data.user;}
-async function requireUser(){const u=await currentUser();if(!u){location.href="login.html";return null;}return u;}
+// Compatibility shim. Authentication is owned by the centralized /auth module.
+async function currentUser(){ return window.SIHAuth.getCurrentUser(); }
+async function requireUser(){
+  const user = await currentUser();
+  if(!user){ window.SIHAuth.redirectToLogin(); return null; }
+  return user;
+}

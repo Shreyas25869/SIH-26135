@@ -8,26 +8,17 @@ function requireClient(){ if(!window.supabaseClient) throw new Error("Supabase i
 function showError(err){ console.error(err); toast(err.message || String(err), true); }
 
 async function boot(){
-  if(!window.supabaseClient){ $("auth-screen").classList.remove("hidden"); $("login-error").textContent="Configure js/config.js before using the application."; return; }
-  const {data:{session}} = await supabaseClient.auth.getSession();
-  if(session) await enterApp(session);
-  supabaseClient.auth.onAuthStateChange((_event, session)=>{ if(session) enterApp(session); else showLogin(); });
+  const session = await window.SIHAuth.getSession();
+  if(!session?.user){ window.SIHAuth.redirectToLogin(); return; }
+  await enterApp(session);
 }
 async function enterApp(session){
   state.session=session; $("auth-screen").classList.add("hidden"); $("app-shell").classList.remove("hidden");
   $("user-email").textContent=session.user.email || "";
   await refreshAll();
 }
-function showLogin(){ $("app-shell").classList.add("hidden"); $("auth-screen").classList.remove("hidden"); }
-
-$("login-form").addEventListener("submit", async e=>{
-  e.preventDefault(); $("login-error").textContent="";
-  try{
-    const {error}=await requireClient().auth.signInWithPassword({email:$("login-email").value.trim(),password:$("login-password").value});
-    if(error) throw error;
-  }catch(err){ $("login-error").textContent=err.message; }
-});
-$("logout-btn").addEventListener("click", async()=>{ try{ await requireClient().auth.signOut(); }catch(e){showError(e)} });
+function showLogin(){ window.SIHAuth.redirectToLogin(); }
+$("logout-btn").addEventListener("click", async()=>{ try{ await window.SIHAuth.signOut(); window.SIHAuth.redirectToLogin(); }catch(e){showError(e)} });
 
 document.querySelectorAll(".nav-item").forEach(btn=>btn.addEventListener("click",()=>navigate(btn.dataset.view)));
 function navigate(view){

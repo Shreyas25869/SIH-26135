@@ -1,44 +1,22 @@
-async function getCurrentUser() {
-  const { data, error } = await supabaseClient.auth.getUser();
-  if (error) throw error;
-  return data.user;
-}
-
+// Compatibility helpers for Person 1 pages.
+// Authentication is owned by /auth and guarded by auth/js/module-guard.js.
+async function getCurrentUser() { return window.SIHAuth.getCurrentUser(); }
 async function requireUser() {
   const user = await getCurrentUser();
-  if (!user) {
-    window.location.href = "login.html";
-    return null;
-  }
+  if (!user) { window.SIHAuth.redirectToLogin(); return null; }
   return user;
 }
-
 async function signOutAndRedirect() {
-  const { error } = await supabaseClient.auth.signOut();
-  if (error) {
-    console.error(error);
-    alert(error.message || "Unable to sign out.");
-    return;
-  }
-  window.location.href = "login.html";
+  await window.SIHAuth.signOut();
+  window.SIHAuth.redirectToLogin();
 }
-
 async function getMyTrainee(userId) {
-  const { data, error } = await supabaseClient
-    .from("trainees")
-    .select("*")
-    .eq("user_id", userId)
-    .maybeSingle();
-
+  const { data, error } = await window.supabaseClient.from("trainees").select("*").eq("user_id", userId).maybeSingle();
   if (error) throw error;
   return data;
 }
-
 async function requireTrainee(userId) {
   const trainee = await getMyTrainee(userId);
-  if (!trainee) {
-    window.location.href = "register.html";
-    return null;
-  }
+  if (!trainee) { window.location.replace("register.html"); return null; }
   return trainee;
 }
