@@ -1,3 +1,2 @@
-const SUPABASE_URL="https://ntkbegbletsjexwcbmob.supabase.co";
-const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50a2JlZ2JsZXRzamV4d2NibW9iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg3MTk4MDEsImV4cCI6MjEwNDI5NTgwMX0.X7N67d1B_TP4lNllfEeQT1HSUbkIJLPc3dDHSJw9irs";
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+// Compatibility shim. The single Supabase client is owned by /auth/js/supabase.js.
+if (!window.supabaseClient) throw new Error("Central Supabase client is not loaded.");
